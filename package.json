@@ -53,7 +53,6 @@
   },
   "devDependencies": {
     "minimist": "^1.2.0",
-    "async-each-series": "^1.1.0",
     "gulp-format-md": "^1.0.0",
     "mocha": "^3.5.3"
   },

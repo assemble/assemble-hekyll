@@ -1,28 +1,31 @@
 'use strict';
 
+/**
+ * Example assemblefile.js
+ */
+
+var hekyll = require('./');
 var argv = require('minimist')(process.argv.slice(2));
-var assemble = require('assemble');
-var hekyll = require('./hekyll');
+var Assemble = require('assemble');
 
 /**
  * Instantiate assemble
  */
 
-var app = module.exports = assemble(argv);
+var app = module.exports = new Assemble(argv);
+
+/**
+ * Options
+ */
+
+app.option({owner: 'jonschlinkert', repo: 'hekyll'});
+app.option(require('./tmp/auth.json'));
 
 /**
  * Register hekyll plugin
  */
 
-app.option({
-  username: 'jonschlinkert',
-  password: 'Nhalle22',
-  owner: 'jonschlinkert',
-  repo: 'hekyll'
-});
-
 app.use(hekyll({cwd: __dirname, theme: 'vendor/poole/lanyon', destBase: 'src'}));
-// app.use(require('./src/themefile.js'));
 
 /**
  * Default task
