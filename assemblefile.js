@@ -26,7 +26,7 @@ app.option(require('./tmp/auth.json'));
  * Register hekyll plugin
  */
 
-app.use(hekyll(app.options));
+app.use(hekyll());
 
 /**
  * Default task

@@ -111,6 +111,18 @@
     "plugins": [
       "gulp-format-md"
     ],
+    "related": {
+      "list": [
+        "hekyll",
+        "hekyll-cli",
+        "generate",
+        "generate-hekyll"
+      ]
+    },
+    "reflinks": [
+      "generate",
+      "generate-hekyll"
+    ],
     "lint": {
       "reflinks": true
     }
