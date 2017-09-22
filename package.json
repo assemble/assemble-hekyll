@@ -1,6 +1,6 @@
 {
   "name": "assemble-hekyll",
-  "description": "Assemble plugin for building a hekyll theme.",
+  "description": "Assemble plugin for building a hekyll theme (Jekyll theme converted to handlebars).",
   "version": "0.1.0",
   "homepage": "https://github.com/assemble/assemble-hekyll",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
@@ -11,7 +11,8 @@
   "license": "MIT",
   "files": [
     "index.js",
-    "lib"
+    "lib",
+    "templates"
   ],
   "main": "index.js",
   "engines": {
@@ -29,12 +30,12 @@
     "delete": "^1.1.0",
     "ent": "^2.2.0",
     "get-value": "^2.0.6",
-    "github-metadata": "^1.0.0",
+    "github-metadata": "^2.0.0",
     "gulp-sass": "^3.1.0",
     "handlebars-helper-create-frame": "^0.1.0",
     "handlebars-helpers": "^0.9.8",
     "handlebars-utils": "^1.0.4",
-    "hekyll": "^3.0.0",
+    "hekyll": "^3.0.3",
     "helper-link-to": "^0.3.0",
     "helper-sort-items": "^0.1.0",
     "is-valid-app": "^0.3.0",
@@ -52,8 +53,8 @@
     "vinyl-fs": "^2.4.4"
   },
   "devDependencies": {
-    "minimist": "^1.2.0",
     "gulp-format-md": "^1.0.0",
+    "minimist": "^1.2.0",
     "mocha": "^3.5.3"
   },
   "keywords": [
