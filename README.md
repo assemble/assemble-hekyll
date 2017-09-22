@@ -1,6 +1,8 @@
 # assemble-hekyll [![NPM version](https://img.shields.io/npm/v/assemble-hekyll.svg?style=flat)](https://www.npmjs.com/package/assemble-hekyll) [![NPM monthly downloads](https://img.shields.io/npm/dm/assemble-hekyll.svg?style=flat)](https://npmjs.org/package/assemble-hekyll) [![NPM total downloads](https://img.shields.io/npm/dt/assemble-hekyll.svg?style=flat)](https://npmjs.org/package/assemble-hekyll)
 
-> Assemble plugin for building a hekyll theme.
+> Assemble plugin for building a hekyll theme (Jekyll theme converted to handlebars).
+
+Follow this project's author, [Jon Schlinkert](https://github.com/jonschlinkert), for updates on this project and others.
 
 ## Install
 
@@ -25,60 +27,115 @@ app.use(hekyll());
 var hekyll = require('assemble-hekyll');
 ```
 
-## Steps
+## Quickstart
 
-### 1. Install hekyll
+The easiest way to convert and build a Jekyll theme with assemble is to start by using [generate-hekyll](https://github.com/generate/generate-hekyll) to convert the theme. generate-hekyll has built-in support for all of GitHub's default Jekyll themes, as well as all of the awesome [poole](https://github.com/poole) themes from [@mdo](https://github.com/mdo).
 
-Git clone this library, <kbd>cd</kbd> into the project, then install its dependencies using [npm](https://www.npmjs.com) with this single command:
+See the [alternative steps](#alternative-steps) if you want more fine grained control over cloning and converting the theme.
 
-```sh
-$ git clone https://github.com/jonschlinkert/hekyll.git && cd hekyll && npm install hekyll
-```
+### 1. Install generate-hekyll
 
-### 2. Clone the theme you want
-
-Clone the theme you want into the `vendor` directory, or whatever directory you prefer.
-
-**Example: poole theme**
-
-For example, to clone the popular [poole theme](https://github.com/poole/poole), from @mdo do:
+First, install [generate](https://github.com/generate/generate) and [generate-hekyll](https://github.com/generate/generate-hekyll):
 
 ```sh
-$ git clone https://github.com/poole/poole.git vendor/poole
+$ npm install -g generate generate-hekyll
 ```
 
-**Example: caymen theme**
+### 2. Convert the theme you want
 
-For example, to clone the popular [jekyll-caymen-theme](https://github.com/pietromenna/jekyll-cayman-theme), do:
+Next, run generate-hekyll to download and convert the theme you want:
 
 ```sh
-$ git clone https://github.com/pietromenna/jekyll-cayman-theme.git vendor/caymen
+$ gen hekyll
 ```
 
-**Example: minima theme**
+### 3. Customize and build!
 
-Or to clone jekyll's [minima-theme](https://github.com/jekyll/minima) do:
-
-```sh
-$ git clone https://github.com/jekyll/minima.git vendor/minima
-```
-
-### 3. Convert the theme
-
-Before you can customize and build your site, you'll need to convert the jekyll site and liquid templates over to use [handlebars](http://www.handlebarsjs.com/) templates:
-
-```sh
-$ hekyll
-```
-
-### 4. Customize and build!
-
-Liquid templates have have been converted handlebars, and the plugin has attempted to convert most of the configuration settings, assets and other non-template files as well.
-
-You should now be able to build the site at any time with the following command:
+Feel free to customize your [assemblefile.js](#assemblefilejs)! You should now be able to build the site at any time with the following command:
 
 ```sh
 $ assemble
+```
+
+### Alternative steps
+
+As an alternative to using `generate-hekyll` to convert the theme (steps 1 and 2), you can do the following.
+
+**Step 1: git clone**
+
+`git clone` the theme you want into a local directory.
+
+**Step 2: Tell assemble where to find the theme**
+
+In `assemblefile.js`, tell assemble where to find the Jekyll theme and where to write the converted handlebars files.
+
+```js
+app.option({
+  // current working directory
+  cwd: __dirname, 
+
+  // path to the jekyll theme
+  theme: 'vendor/poole/lanyon', 
+
+  // path to write the converted files. remember, the generated files 
+  // will become your "source" templates when you build the handlebars
+  // theme with assemble
+  destBase: 'src' 
+});
+```
+
+**Step 3: Convert the theme**
+
+Run the following to convert your theme.
+
+```sh
+$ assemble hekyll
+```
+
+## assemblefile.js
+
+Example code to use in your `assemblefile.js`.
+
+```js
+var hekyll = require('assemble-hekyll');
+var argv = require('minimist')(process.argv.slice(2));
+var Assemble = require('assemble');
+
+/**
+ * Instantiate and expose your instance of assemble to assemble's CLI
+ */
+
+var app = module.exports = new Assemble(argv);
+
+/**
+ * Options
+ */
+
+// these options are necessary only if you're cloning the theme yourself
+// using the alternative steps described above. Replace these values with
+// your own.
+app.option({cwd: __dirname, theme: 'vendor/poole/lanyon', destBase: 'src'});
+
+// the following options are necessary if you want to download metadata
+// from the repository to use in templates. Replace these values with
+// the owner/repository to use for getting metadata.
+app.option({owner: 'jonschlinkert', repo: 'hekyll'});
+
+// if you want to download metadata, pass username and password, or token.
+// note that the `metadata` task is skipped if these values aren't defined
+app.option(require('./tmp/auth.json'));
+
+/**
+ * Register hekyll plugin
+ */
+
+app.use(hekyll(app.options));
+
+/**
+ * Default task
+ */
+
+app.task('default', ['theme']);
 ```
 
 ## Please help improve this project
@@ -86,6 +143,15 @@ $ assemble
 As with any site, you'll need to make some customizations, and potentially fix any remaining issues that were missed by the plugin. If you find a bug, or something that doesn't work, but you think this plugin should handle it, please [don't hesitate to create an issue](../../issues/new).
 
 ## About
+
+### Related projects
+
+You might also be interested in these projects:
+
+* [generate-hekyll](https://www.npmjs.com/package/generate-hekyll): Scaffold out a handlebars theme from a Jekyll theme using Hekyll. | [homepage](https://github.com/generate/generate-hekyll "Scaffold out a handlebars theme from a Jekyll theme using Hekyll.")
+* [generate](https://www.npmjs.com/package/generate): Command line tool and developer framework for scaffolding out new GitHub projects. Generate offers the… [more](https://github.com/generate/generate) | [homepage](https://github.com/generate/generate "Command line tool and developer framework for scaffolding out new GitHub projects. Generate offers the robustness and configurability of Yeoman, the expressiveness and simplicity of Slush, and more powerful flow control and composability than either.")
+* [hekyll-cli](https://www.npmjs.com/package/hekyll-cli): CLI for hekyll, the Jekyll to Handlebars theme converter. | [homepage](https://github.com/jonschlinkert/hekyll-cli "CLI for hekyll, the Jekyll to Handlebars theme converter.")
+* [hekyll](https://www.npmjs.com/package/hekyll): Migrate Jekyll (gh-pages) themes to use handlebars instead of liquid. | [homepage](https://github.com/jonschlinkert/hekyll "Migrate Jekyll (gh-pages) themes to use handlebars instead of liquid.")
 
 ### Contributing
 
@@ -125,4 +191,4 @@ Released under the [MIT License](LICENSE).
 
 ***
 
-_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.6.0, on August 08, 2017._
+_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.6.0, on September 21, 2017._
