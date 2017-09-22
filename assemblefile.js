@@ -18,6 +18,7 @@ var app = module.exports = new Assemble(argv);
  * Options
  */
 
+app.option({cwd: __dirname, theme: 'vendor/poole/lanyon', destBase: 'src'});
 app.option({owner: 'jonschlinkert', repo: 'hekyll'});
 app.option(require('./tmp/auth.json'));
 
@@ -25,7 +26,7 @@ app.option(require('./tmp/auth.json'));
  * Register hekyll plugin
  */
 
-app.use(hekyll({cwd: __dirname, theme: 'vendor/poole/lanyon', destBase: 'src'}));
+app.use(hekyll(app.options));
 
 /**
  * Default task
