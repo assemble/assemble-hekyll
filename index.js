@@ -42,15 +42,13 @@ module.exports = function(options) {
 
     app.task('metadata', function(cb) {
       if (!fs.existsSync(paths.src())) {
-        cb();
-        return;
+        return Promise.resolve(null);
       }
 
       var github = app.store.get('github');
       if (github && !app.options.github) {
         app.data('github', github);
-        cb();
-        return;
+        return Promise.resolve(null);
       }
 
       var opts = pick(app.options, [
@@ -62,29 +60,23 @@ module.exports = function(options) {
       ]);
 
       if (!opts.token && !opts.username && !opts.password) {
-        cb();
-        return;
+        return Promise.resolve(null);
       }
 
       if (!opts.owner || !opts.repo) {
-        cb();
-        return;
+        return Promise.resolve(null);
       }
 
       var repo = `${opts.owner}/${opts.repo}.`;
       console.log('getting metadata for', repo, 'This is only done once, unless you pass the --github flag.');
 
-      metadata(opts, function(err, data) {
-        if (err) {
-          cb(err);
-          return;
-        }
-
-        data.public_repositories = [];
-        app.store.set('github', data);
-        app.data('github', data);
-        cb();
-      });
+      return metadata(opts)
+        .then(function(data) {
+          console.log(data)
+          data.public_repositories = [];
+          app.store.set('github', data);
+          app.data('github', data);
+        });
     });
 
     /**
