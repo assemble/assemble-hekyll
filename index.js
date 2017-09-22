@@ -72,7 +72,6 @@ module.exports = function(options) {
 
       return metadata(opts)
         .then(function(data) {
-          console.log(data)
           data.public_repositories = [];
           app.store.set('github', data);
           app.data('github', data);
